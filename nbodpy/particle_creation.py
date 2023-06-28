@@ -3,10 +3,10 @@ import pandas as pd
 
 class Particle:
     def __init__(self, pos, vel, mass):
-        self.pos = pos
-        self.vel = vel
-        self.acc = np.zeros_like(pos)
-        self.mass = mass
+        self.pos = pos.astype(np.float32)
+        self.vel = vel.astype(np.float32)
+        self.acc = np.zeros_like(pos).astype(np.float32)
+        self.mass = mass.astype(np.float32)
 
 def par_create_2d(pars_df):
     '''

@@ -11,8 +11,9 @@ def cic_acc_2d(pars, ng, gravity, h=1):
     Output:
         Put acceleration into Particle.acc
     '''
-    acc_x_neg, acc_y_neg = np.gradient(gravity, 1, edge_order=1)
-    acc_x, acc_y= 1 * acc_x_neg, 1 * acc_y_neg
+    gravity_pdc = np.pad(gravity, pad_width=1,mode='wrap')
+    acc_x_pdc, acc_y_pdc = np.gradient(gravity_pdc, 1, edge_order=1)
+    acc_x, acc_y= -1 * acc_x_pdc[1:-1, 1:-1], -1 * acc_y_pdc[1:-1, 1:-1]
     
     for par in pars:
         pos = par.pos
@@ -27,3 +28,5 @@ def cic_acc_2d(pars, ng, gravity, h=1):
             par_acc_x += np.multiply.reduce(np.where(idx_shift, 1-pos_star, pos_star)) * acc_x[rho_idx[0], rho_idx[1]] * (h ** 2)
             par_acc_y += np.multiply.reduce(np.where(idx_shift, 1-pos_star, pos_star)) * acc_y[rho_idx[0], rho_idx[1]] * (h ** 2)
         par.acc = np.array([par_acc_x, par_acc_y])
+    return acc_x, acc_y
+

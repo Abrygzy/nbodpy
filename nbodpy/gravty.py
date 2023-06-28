@@ -9,7 +9,7 @@ def grav_from_den_2d(dens):
     Output:
         phi: gravitational potential with periodic boundary conditions (0 cell padding for all axis)
     '''
-    G = 1
+    G = 100
     L = len(dens)
     kx, ky = np.meshgrid(np.fft.fftfreq(L, d=1/L), np.fft.fftfreq(L, d=1/L), indexing='ij')
     g_k = kx**2 + ky**2 
@@ -19,5 +19,3 @@ def grav_from_den_2d(dens):
     phi_k[0, 0] = 0
     phi = np.fft.ifftn(phi_k).real
     return phi
-
-
