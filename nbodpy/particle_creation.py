@@ -3,10 +3,16 @@ import pandas as pd
 
 class Particle:
     def __init__(self, pos, vel, mass):
-        self.pos = pos.astype(np.float32)
-        self.vel = vel.astype(np.float32)
-        self.acc = np.zeros_like(pos).astype(np.float32)
+        self.pos = pos.astype(np.float32) # position_z, position_y, position_x
+        self.vel = vel.astype(np.float32) # velocity_z, velocity_y, velocity_x
+        self.acc = np.zeros_like(pos).astype(np.float32) # acceleration_z, acceleration_y, acceleration_x
         self.mass = mass.astype(np.float32)
+    def periodic(self, ng):
+        '''
+        Periodic boundary conditions.
+        '''
+        self.pos = np.where(self.pos < 0, self.pos%ng, self.pos)
+        self.pos = np.where(self.pos >= ng, self.pos%ng, self.pos)
 
 def par_create_2d(pars_df):
     '''
@@ -16,8 +22,23 @@ def par_create_2d(pars_df):
     Output:
         par_list: list of Particle objects
     '''
-    pars_pos = pars_df.loc[:, ['pos_x', 'pos_y']].values
-    pars_vel = pars_df.loc[:, ['vel_x', 'vel_y']].values
+    # pars_pos = pars_df.loc[:, ['pos_y','pos_x']].values
+    # pars_vel = pars_df.loc[:, ['vel_y', 'vel_x']].values
+    pars_pos = pars_df.loc[:, ['pos_x','pos_y']].values
+    pars_vel = pars_df.loc[:, ['vel_x','vel_y']].values
     pars_mass = pars_df.loc[:, 'mass'].values
     par_list = [Particle(pos, vel, mass) for pos, vel, mass in zip(pars_pos, pars_vel, pars_mass)]
     return par_list
+
+def par_to_array(par_list):
+    '''
+    Convert list of Particle objects to numpy array.
+    Input:
+        par_list: list of Particle objects
+    Output:
+        pars: numpy array with columns ['pos_y', 'pos_x', 'vel_x', 'vel_y', 'mass']
+    '''
+    par_array = np.zeros((len(par_list), 5))
+    for i, par in enumerate(par_list):
+        par_array[i, :] = np.array([par.pos[1], par.pos[0], par.vel[1], par.vel[0], par.mass])
+    return par_array
