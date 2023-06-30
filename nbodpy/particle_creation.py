@@ -2,11 +2,12 @@ import numpy as np
 import pandas as pd
 
 class Particle:
-    def __init__(self, pos, vel, mass):
-        self.pos = pos.astype(np.float32) # position_z, position_y, position_x
-        self.vel = vel.astype(np.float32) # velocity_z, velocity_y, velocity_x
+    def __init__(self, pos, vel, mass,id):
+        self.pos = pos.astype(np.float32) # position_x，position_y，position_z, 
+        self.vel = vel.astype(np.float32) # velocity_x, velocity_y, velocity_z,
         self.acc = np.zeros_like(pos).astype(np.float32) # acceleration_z, acceleration_y, acceleration_x
         self.mass = mass.astype(np.float32)
+        self.id = id.astype(int)
     def periodic(self, ng):
         '''
         Periodic boundary conditions.
@@ -27,7 +28,8 @@ def par_create_2d(pars_df):
     pars_pos = pars_df.loc[:, ['pos_x','pos_y']].values
     pars_vel = pars_df.loc[:, ['vel_x','vel_y']].values
     pars_mass = pars_df.loc[:, 'mass'].values
-    par_list = [Particle(pos, vel, mass) for pos, vel, mass in zip(pars_pos, pars_vel, pars_mass)]
+    pars_id = pars_df.loc[:, 'id'].values
+    par_list = [Particle(pos, vel, mass, id) for pos, vel, mass, id in zip(pars_pos, pars_vel, pars_mass,pars_id)]
     return par_list
 
 def par_to_array(par_list):
