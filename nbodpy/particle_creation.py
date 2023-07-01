@@ -32,6 +32,21 @@ def par_create_2d(pars_df):
     par_list = [Particle(pos, vel, mass, id) for pos, vel, mass, id in zip(pars_pos, pars_vel, pars_mass,pars_id)]
     return par_list
 
+def par_create_3d(pars_df):
+    '''
+    Create particles from pandas DataFrame.
+    Input:
+        pars_df: pandas DataFrame with columns ['pos_x', 'pos_y', 'pos_z', 'vel_x', 'vel_y', 'vel_z', 'mass']
+    Output:
+        par_list: list of Particle objects
+    '''
+    pars_pos = pars_df.loc[:, ['pos_x', 'pos_y', 'pos_z']].values
+    pars_vel = pars_df.loc[:, ['vel_x', 'vel_y', 'vel_z']].values
+    pars_mass = pars_df.loc[:, 'mass'].values
+    pars_id = pars_df.loc[:, 'id'].values
+    par_list = [Particle(pos, vel, mass, id) for pos, vel, mass, id in zip(pars_pos, pars_vel, pars_mass, pars_id)]
+    return par_list
+
 def par_to_array(par_list):
     '''
     Convert list of Particle objects to numpy array.
@@ -42,5 +57,5 @@ def par_to_array(par_list):
     '''
     par_array = np.zeros((len(par_list), 5))
     for i, par in enumerate(par_list):
-        par_array[i, :] = np.array([par.pos[1], par.pos[0], par.vel[1], par.vel[0], par.mass])
+        par_array[i, :] = np.array([par.pos[0], par.pos[1], par.vel[0], par.vel[1], par.mass])
     return par_array
