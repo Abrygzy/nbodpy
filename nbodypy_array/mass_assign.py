@@ -1,5 +1,4 @@
 import numpy as np
-from multiprocessing import Pool
 from numba import jit
 from paras import ng, h
 
@@ -21,7 +20,6 @@ def cic_density_2d(pars_pos_mass):
     return dens
 
 
-# def cic
 
 @jit(nopython=True) 
 def cic_density_3d(pars_pos_mass):
